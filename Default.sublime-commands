@@ -7,7 +7,7 @@
         }
     },
     {
-        "caption": "QuickMenu: Demo...",
+        "caption": "QuickMenu: Run Demo...",
         "command": "quick_menu"
     },
     {

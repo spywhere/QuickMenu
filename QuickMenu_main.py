@@ -18,78 +18,112 @@ class QuickMenuCommand(sublime_plugin.WindowCommand):
         # Startup menu
         "main": {
             # Its items
-            "items": [["Dialogs...", "All dialog items"], ["Items...", "Do action on item"], ["Commands...", "Run command"]],
-            # Item's actions
-            "actions": [
-            {
-                # Redirect to "dialogs" submenu
-                "name": "dialogs"
-            }, {
-                # Redirect to "items" submenu
-                "name": "items"
-            }, {
-                # Redirect to "commands" submenu
-                "name": "commands"
-            }
+            "items": [
+                {
+                    "name": ["Dialogs...", "All dialog items"],
+                    "action": {
+                        "name": "dialogs"
+                    }
+                }, {
+                    "name": ["Items...", "Do action on item"],
+                    "action": {
+                        "name": "items"
+                    }
+                }, {
+                    "name": ["Commands...", "Run command"],
+                    "action": {
+                        "name": "commands"
+                    }
+                }
             ]
         },
         # Custom menu named "dialogs"
         "dialogs": {
             # Selected second item as default
             "selected_index": 2,
-            "items": [["Back", "Back to previous menu"], ["Message Dialog", "Hello, World on Message Dialog"], ["Error Dialog", "Hello, World on Error Dialog"]],
-            "actions": [
-            {
-                "name": "main",
-            }, {
-                # This will select "Message Dialog command" on "commands" menu
-                "name": "commands",
-                "item": 2
-            }, {
-                "name": "commands",
-                "item": 3
-            }
+            "items": [
+                {
+                    "name": ["Back", "Back to previous menu"],
+                    "action": {
+                        "name": "main"
+                    }
+                }, {
+                    "name": ["Message Dialog", "Hello, World on Message Dialog"],
+                    "action": {
+                        # This will select "Message Dialog command" on "commands" menu
+                        "name": "commands",
+                        "item": 2
+                    }
+                }, {
+                    "name": ["Error Dialog", "Hello, World on Error Dialog"],
+                    "action": {
+                        "name": "commands",
+                        "item": 3
+                    }
+                }
             ]
         },
         "items": {
             "selected_index": 2,
-            "items": [["Back", "Back to previous menu"], ["Item 2 on Dialogs", "Select item 2 in Dialogs"], ["Item 3 on Dialogs", "Select item 3 in Dialogs"], ["Item 4 on Commands", "Select item 4 in Commands"]],
-            "actions": [
-            {
-                "name": "main",
-            }, {
-                "name": "dialogs",
-                "item": 2
-            }, {
-                "name": "dialogs",
-                "item": 3
-            }, {
-                "name": "commands",
-                "item": 4
-            }
+            "items": [
+                {
+                    "name": ["Back", "Back to previous menu"],
+                    "action": {
+                        "name": "main"
+                    }
+                }, {
+                    "name": ["Item 2 on Dialogs", "Select item 2 in Dialogs"],
+                    "action": {
+                        "name": "dialogs",
+                        "item": 2
+                    }
+                }, {
+                    "name": ["Item 3 on Dialogs", "Select item 3 in Dialogs"],
+                    "action": {
+                        "name": "dialogs",
+                        "item": 3
+                    }
+                }, {
+                    "name": ["Item 4 on Commands", "Select item 4 in Commands"],
+                    "action": {
+                        "name": "commands",
+                        "item": 4
+                    }
+                }
             ]
         },
         "commands": {
             "selected_index": 2,
-            "items": [["Back", "Back to previous menu"], ["Message Dialog command", "Hello, World on Message Dialog"], ["Error Dialog command", "Hello, World on Error Dialog"], ["Custom command", "Open User's settings file"]],
-            "actions": [
-            {
-                "name": "main",
-            }, {
-                # Show a message dialog
-                "command": "message_dialog",
-                "args": "Message: Hello, World"
-            }, {
-                # Show an error dialog
-                "command": "error_dialog",
-                "args": "Error: Hello, World"
-            }, {
-                # Run custom command
-                "command": "open_file",
-                "args": {
-                    "file": "${packages}/User/Preferences.sublime-settings"
+            "items": [
+                {
+                    "name": ["Back", "Back to previous menu"],
+                    "action": {
+                        "name": "main"
+                    }
+                }, {
+                    "name": ["Message Dialog command", "Hello, World on Message Dialog"],
+                    "action": {
+                        # Show a message dialog
+                        "command": "message_dialog",
+                        "args": "Message: Hello, World"
+                    }
+                }, {
+                    "name": ["Error Dialog command", "Hello, World on Error Dialog"],
+                    "action": {
+                        # Show an error dialog
+                        "command": "error_dialog",
+                        "args": "Error: Hello, World"
+                    }
+                }, {
+                    "name": ["Custom command", "Open User's settings file"],
+                    "action": {
+                        # Run custom command
+                        "command": "open_file",
+                        "args": {
+                            "file": "${packages}/User/Preferences.sublime-settings"
+                        }
+                    }
                 }
-            }
             ]
         }
     }

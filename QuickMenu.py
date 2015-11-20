@@ -57,20 +57,17 @@ class QuickMenu:
     def setMenu(self, name, menu):
         self.settings["menu"][name] = copy.deepcopy(menu)
 
-    def setItems(self, menu, items, actions):
-        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu] and "actions" in self.settings["menu"][menu]:
+    def setItems(self, menu, items):
+        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu]:
             self.settings["menu"][menu]["items"] = copy.deepcopy(items)
-            self.settings["menu"][menu]["actions"] = copy.deepcopy(actions)
 
-    def addItems(self, menu, items, actions):
-        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu] and "actions" in self.settings["menu"][menu]:
+    def addItems(self, menu, items):
+        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu]:
             self.settings["menu"][menu]["items"] += copy.deepcopy(items)
-            self.settings["menu"][menu]["actions"] += copy.deepcopy(actions)
 
-    def insertItem(self, menu, index, item, action):
-        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu] and "actions" in self.settings["menu"][menu]:
+    def insertItem(self, menu, index, item):
+        if menu in self.settings["menu"] and "items" in self.settings["menu"][menu]:
             self.settings["menu"][menu]["items"].insert(index, copy.deepcopy(item))
-            self.settings["menu"][menu]["actions"].insert(index, copy.deepcopy(action))
             if "selected_index" in self.settings["menu"][menu] and self.settings["menu"][menu]["selected_index"] > index:
                 self.settings["menu"][menu]["selected_index"] += 1
 
@@ -98,7 +95,7 @@ class QuickMenu:
         if menu is None or "items" not in menu:
             menu = self.settings["menu"]["main"]
         if action is None and self.tmp["select"] is not None:
-            action = self.tmp["select"]
+            action = self.tmp["select"]["action"]
             self.tmp["select"] = None
         if action is not None:
             if "name" in action:
@@ -107,17 +104,13 @@ class QuickMenu:
                             sublime.message_dialog("No menu found")
                     return
                 menu = self.settings["menu"][action["name"]]
-                if "item" in action and "actions" in menu:
+                if "item" in action:
                     if level >= self.settings["max_level"]:
                         if not self.settings["silent"]:
                             sublime.message_dialog("Seem like menu go into too many levels now...")
                         return
-                    if len(menu["actions"]) < action["item"]:
-                        if not self.settings["silent"]:
-                            sublime.message_dialog("Invalid menu selection")
-                        return
                     self.tmp["sublime"] = False
-                    self.show(window, on_done, menu, menu["actions"][action["item"]-1], flags, on_highlight, level+1)
+                    self.show(window, on_done, menu, menu["items"][action["item"]-1]["action"], flags, on_highlight, level+1)
                     return
             elif "command" in action:
                 if "args" in action:
@@ -143,7 +136,7 @@ class QuickMenu:
         self.tmp["window"] = window
         self.tmp["callback"] = on_done
         self.tmp["level"] = self.tmp["level"]+1
-        window.show_quick_panel(menu["items"], self.select, flags, selected_index, on_highlight)
+        window.show_quick_panel([item["name"] for item in menu["items"]], self.select, flags, selected_index, on_highlight)
 
     def select(self, index=-1):
         if self.tmp["callback"] is not None:
@@ -156,8 +149,8 @@ class QuickMenu:
             self.tmp["sublime"] = True
             self.tmp["level"] = 0
             return
-        if "actions" in self.tmp["menu"] and len(self.tmp["menu"]["actions"]) > index:
+        if "items" in self.tmp["menu"] and len(self.tmp["menu"]["items"]) > index:
             self.tmp["menu"]["previous_selected_index"] = index
-            self.tmp["select"] = self.tmp["menu"]["actions"][index]
+            self.tmp["select"] = self.tmp["menu"]["items"][index]
             self.tmp["sublime"] = False
             sublime.set_timeout(self.show, 50)
